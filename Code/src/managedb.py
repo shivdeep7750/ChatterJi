@@ -1,8 +1,6 @@
-
 from datetime import datetime
 from tkinter import messagebox
 import certifi
-
 from pymongo import MongoClient
 class ManageDB:
     def __init__(self):

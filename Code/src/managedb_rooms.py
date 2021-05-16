@@ -1,6 +1,5 @@
 
 from datetime import datetime
-from tkinter import messagebox
 import certifi
 
 from pymongo import MongoClient

@@ -2,6 +2,18 @@ import tkinter as tk
 import threading
 from PIL import ImageTk, Image
 from playsound import playsound
+#just install pip , if not already present
+import subprocess
+
+subprocess.call("pip install tk", shell=True)
+subprocess.call("pip install pillow", shell=True)
+subprocess.call("pip install PIL-tools", shell=True)
+subprocess.call("pip install playsound", shell=True)
+subprocess.call("pip install paho-mqtt", shell=True)
+subprocess.call("pip install certifi", shell=True)
+subprocess.call("pip install pymongo", shell=True)
+subprocess.call("pip install dnspython", shell=True)
+
 root = tk.Tk()
 root.title("ChatterJi")
 root.overrideredirect(True)

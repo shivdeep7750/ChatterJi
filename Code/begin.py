@@ -1,5 +1,3 @@
-
-
 from tkinter import *
 from tkinter import simpledialog
 import tkinter as Tk
@@ -9,19 +7,14 @@ import Code.src.managedb as mdb
 import Code.src.managedb_rooms as rooms
 import paho.mqtt.client as mqtt
 import random
-import cv2
 import base64
-import json
-from PIL import Image as im
-import numpy as np
-import ast
 from datetime import datetime
 random.seed(datetime.now())
 randseed=random.randint(1, 100000)
 from tkinter import filedialog as fd
 listbox=None
 ended = False
-user='NONE'
+user=None
 room=None
 import hashlib
 def on_message(client, userdata, message):
@@ -42,7 +35,6 @@ def on_message(client, userdata, message):
             pass
         elif((msg['rand1']!='NULL') and msg['rand']!=str(randseed) ):
             file = msg['data1']
-            print(file)
             decodeit = open(str('Downloads/File_from_'+msg['sender']+str(datetime.now().strftime("%b-%d-%Y-%H-%M-%S"))+'.'+msg['rand1']), 'wb')
             decodeit.write(base64.b64decode((file)))
             decodeit.close()
@@ -100,7 +92,6 @@ def upload():
 def on_click2():
     global chat1
     global client
-    #client.loop_start()
     listbox1.configure(state='normal')
     data = str(chat1.get())
     listbox1.insert(END, "Me: "+data+"\n")
@@ -147,11 +138,8 @@ def main3():
     window.overrideredirect(True)
     window.geometry("1600x900")
     img1 = ImageTk.PhotoImage(Image.open("../Images/ChatterJi-Icon.png").resize((15, 15), Image.ADAPTIVE))
-    #img = ImageTk.PhotoImage(Image.open("..\Images\ChatterJi-logos_transparent.png").resize((1600, 600), Image.ANTIALIAS))
     window.iconphoto(False, img1)
     window.configure(background="grey")
-    #background_label = Label(window, image=img)
-    #background_label.grid(column=0,row=0, padx=0, pady=0)
     global listbox1
     global chat1
     listbox1 = Text(window, wrap=WORD, width="139", height="30", font=("Courier", 14),bg='#b3ecff',fg='red')
@@ -163,25 +151,21 @@ def main3():
     chat1['fg'] = 'red'
     chat1['font'] = ("Courier", 12)
     chat1.grid(column=0, row=1, padx=1, pady=1)
-    # Button
     send = Tk.Button(window, command=on_click, text="Send",width=30,height=2,bg='#2bad50')
     send['relief'] = Tk.GROOVE
     send['activebackground'] = '#404040'
     send['padx'] = 1
     send['font'] = ("Courier", 15)
     send.grid(column=0, row=2, padx=5, pady=15)
-    #background_label.grid(row=1, column=0,columnspan=3, padx=0, pady=0)
     button40 = Tk.Button(window,text="Leave the Room", height=1, width=30, command=on_click3,bg='red')
     button40.grid(row=3)
 
     button41 = Tk.Button(window, text="Upload", height=1, width=30, command=upload, bg='white')
     button41.grid(row=4)
     conn(room)
-    #######sample
     listbox1.configure(state='normal')
     listbox1.tag_configure("center", justify='center')
     listbox1.insert(END,"Connected to "+room+" as "+user+"\n\n\n\n")
-    #listbox1.tag_configure("center", justify='left')
     listbox1.configure(state='disabled')
 
     window.mainloop()
@@ -207,13 +191,10 @@ def join():
     data=listbox.get(ANCHOR)
     global room
     room=data
-    i=data.find(' by ')
-    #room=data[0:i]
     data1={
         "room":data,
         "creator":user
     }
-##############################################    ##process furthur
     main3()
 def oldroom():
     button1.destroy()
@@ -263,23 +244,20 @@ def get_data(user):
     return data
 
 def check_username(user):
-    if len(user)>=4 and user!='NONE':
+    if len(user)>=4 and user!=None:
         return True
     return False
 
 def process():
     global ended
     global user
-    if(user=='NONE'):
+    if(user==None):
         exit(0)
     db = mdb.ManageDB()
     stats = get_data(user)
     db.save_data(stats)
     db.view_records()
     ended = True
-    filename='../Code/RoomSelector.py'
-    ###########delete all
-    #exec(compile(open(filename, "rb").read(), filename, 'exec'))
     button1.destroy()
     button2.destroy()
     w.destroy()
