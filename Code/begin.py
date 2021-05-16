@@ -1,3 +1,5 @@
+
+
 from tkinter import *
 from tkinter import simpledialog
 import tkinter as Tk
@@ -38,10 +40,10 @@ def on_message(client, userdata, message):
     else:
         if(msg['rand']==str(randseed) and msg['rand1']=='NULL'):
             pass
-        elif(not(msg['rand1'][0]>='0' and msg['rand1'][0]<='9') ):
+        elif((msg['rand1']!='NULL') and msg['rand']!=str(randseed) ):
             file = msg['data1']
             print(file)
-            decodeit = open(str('Downloads/img_from_'+msg['sender']+str(datetime.now().strftime("%b-%d-%Y-%H-%M-%S"))+'.'+msg['rand1']), 'wb')
+            decodeit = open(str('Downloads/File_from_'+msg['sender']+str(datetime.now().strftime("%b-%d-%Y-%H-%M-%S"))+'.'+msg['rand1']), 'wb')
             decodeit.write(base64.b64decode((file)))
             decodeit.close()
             listbox1.insert(END,msg['data']+" was shared by "+msg['sender']+"\n")
@@ -82,10 +84,15 @@ def upload():
     data = {'data': "File Sent : "+filename,
             'sender': user}
     hash = hashlib.md5(str(data).encode())
+    ext=filename[::-1]
+    i=ext.find('.')
+    ext=ext[0:i]
+    ext=ext[::-1]
+
     data = {'data': "File Shared : "+filename,
             'sender': user,
             'rand' : str(randseed),
-            'rand1': 'png',
+            'rand1': ext,
             'data1': data1,
             'hash': str(hash)}
     client.publish(room, str(data))
